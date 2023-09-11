@@ -1,22 +1,20 @@
 'use client'
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export function UserMenu() {
   const router = useRouter()
   const handleLogout = () => {
-    localStorage.removeItem('accessToken')
+    localStorage?.removeItem('accessToken')
     router.push('/')
   }
 
-  const userName = localStorage.getItem('userName')
+  const [userName, setUserName] = useState<string | null>('')
+
+
+  useEffect(() => {
+    setUserName(localStorage?.getItem('userName'))
+  }, [])
 
   return (
     <div className="group block">
@@ -41,9 +39,9 @@ export function UserMenu() {
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                   />
                 </svg>

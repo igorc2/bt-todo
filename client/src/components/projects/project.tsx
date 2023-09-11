@@ -77,7 +77,7 @@ export function Project({ id, name, tasks }: ProjectProps) {
       </CardHeader>
       <CardContent className="pt-6">
         <div className="text-l text-gray-900 mb-2">To do</div>
-        {todoTasks &&
+        {todoTasks && todoTasks.length ?
           todoTasks.map((task) => (
             <Task
               id={task.id}
@@ -87,9 +87,9 @@ export function Project({ id, name, tasks }: ProjectProps) {
               projectId={id}
               statusId={task.statusId}
             />
-          ))}
+          )) : <div className="text-gray-500 text-sm mb-4">Nothing to do? Try to add some tasks :)</div> }
         <div className="text-l text-gray-900 mb-2">Done</div>
-        {doneTasks &&
+        {doneTasks && doneTasks.length ? 
           doneTasks.map((task) => (
             <Task
               id={task.id}
@@ -99,7 +99,7 @@ export function Project({ id, name, tasks }: ProjectProps) {
               projectId={id}
               statusId={task.statusId}
             />
-          ))}
+          )) : <div className="text-gray-500 text-sm">Nothing done yet :(</div>}
       </CardContent>
       <CardFooter className="border-t border-slate-200 pt-6">
         <CreateTask projectId={id} />
