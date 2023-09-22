@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
 import {
   Card,
   CardContent,
@@ -8,13 +7,10 @@ import {
   CardHeaderControl,
   CardTitle,
 } from '../ui/card'
-import { BiPencil } from 'react-icons/bi'
 import { BiTrash } from 'react-icons/bi'
 import { Task } from '../tasks/task'
-import { useState } from 'react'
 import { useProjects } from './projects-context'
 import { CreateTask } from '../tasks/create-task'
-import { Edit } from 'lucide-react'
 import { EditProject } from './edit-project'
 
 interface Tasks {
@@ -40,7 +36,6 @@ export function Project({ id, name, tasks }: ProjectProps) {
   const { setProjects, projects } = useProjects()
 
   const handleDeleteProject = () => {
-    console.log('Delete project')
     const accessToken = localStorage.getItem('accessToken')
     axios
       .delete(`http://localhost:3700/projects/${id}`, {
@@ -77,7 +72,7 @@ export function Project({ id, name, tasks }: ProjectProps) {
       </CardHeader>
       <CardContent className="pt-6">
         <div className="text-l text-gray-900 mb-2">To do</div>
-        {todoTasks && todoTasks.length ?
+        {todoTasks && todoTasks.length ? (
           todoTasks.map((task) => (
             <Task
               id={task.id}
@@ -87,9 +82,14 @@ export function Project({ id, name, tasks }: ProjectProps) {
               projectId={id}
               statusId={task.statusId}
             />
-          )) : <div className="text-gray-500 text-sm mb-4">Nothing to do? Try to add some tasks :)</div> }
+          ))
+        ) : (
+          <div className="text-gray-500 text-sm mb-4">
+            Nothing to do? Try to add some tasks :)
+          </div>
+        )}
         <div className="text-l text-gray-900 mb-2">Done</div>
-        {doneTasks && doneTasks.length ? 
+        {doneTasks && doneTasks.length ? (
           doneTasks.map((task) => (
             <Task
               id={task.id}
@@ -99,7 +99,10 @@ export function Project({ id, name, tasks }: ProjectProps) {
               projectId={id}
               statusId={task.statusId}
             />
-          )) : <div className="text-gray-500 text-sm">Nothing done yet :(</div>}
+          ))
+        ) : (
+          <div className="text-gray-500 text-sm">Nothing done yet :(</div>
+        )}
       </CardContent>
       <CardFooter className="border-t border-slate-200 pt-6">
         <CreateTask projectId={id} />

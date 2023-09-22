@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import { EStatusCode } from '../projects/project'
 import { Edit } from 'lucide-react'
 import { EditTask } from './edit-task'
+import { useAuthorizedMutation } from '@/lib/useAuthorizedMutation'
 
 interface TaskProps {
   id: number
@@ -25,46 +26,52 @@ interface TaskProps {
 export function Task({ id, name, projectId, statusId, finishDate }: TaskProps) {
   const { setProjects, projects } = useProjects()
 
+  const mutation = useAuthorizedMutation(`tasks/${id}`);
+
   const handleChange = () => {
     console.log('Change status')
-    const accessToken = localStorage.getItem('accessToken')
-    axios
-      .put(
-        `http://localhost:3700/tasks/${id}`,
-        {
-          statusId:
-            statusId === EStatusCode.TODO ? EStatusCode.DONE : EStatusCode.TODO,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
-      .then(() => {
-        setProjects(
-          projects.map((project) => {
-            if (project.id === projectId) {
-              return {
-                ...project,
-                tasks: project.tasks.map((task) => {
-                  if (task.id === id) {
-                    return {
-                      ...task,
-                      statusId:
-                        statusId === EStatusCode.TODO
-                          ? EStatusCode.DONE
-                          : EStatusCode.TODO,
-                    }
-                  }
-                  return task
-                }),
-              }
-            }
-            return project
-          })
-        )
-      })
+    mutation.mutate({ 
+      statusId: statusId === EStatusCode.TODO ? EStatusCode.DONE : EStatusCode.TODO,
+    })
+
+    // const accessToken = localStorage.getItem('accessToken')
+    // axios
+    //   .put(
+    //     `http://localhost:3700/tasks/${id}`,
+    //     {
+    //       statusId:
+    //         statusId === EStatusCode.TODO ? EStatusCode.DONE : EStatusCode.TODO,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${accessToken}`,
+    //       },
+    //     }
+    //   )
+    //   .then(() => {
+    //     setProjects(
+    //       projects.map((project) => {
+    //         if (project.id === projectId) {
+    //           return {
+    //             ...project,
+    //             tasks: project.tasks.map((task) => {
+    //               if (task.id === id) {
+    //                 return {
+    //                   ...task,
+    //                   statusId:
+    //                     statusId === EStatusCode.TODO
+    //                       ? EStatusCode.DONE
+    //                       : EStatusCode.TODO,
+    //                 }
+    //               }
+    //               return task
+    //             }),
+    //           }
+    //         }
+    //         return project
+    //       })
+    //     )
+    //   })
   }
 
   const handleDeleteTask = () => {
